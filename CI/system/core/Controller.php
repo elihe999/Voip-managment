@@ -78,6 +78,8 @@ class CI_Controller {
 		$this->load =& load_class('Loader', 'core');
 		$this->load->initialize();
 		log_message('info', 'Controller Class Initialized');
+		// new: add login control
+		$this->check_login();
 	}
 
 	// --------------------------------------------------------------------
@@ -92,5 +94,28 @@ class CI_Controller {
 	{
 		return self::$instance;
 	}
+
+	/**
+	 * @api 
+	 * @apiDescription The login status should be control by session
+	 * 
+	 * @apiGroup System
+	 */
+	public function check_login()
+    {
+        if($this->need_login)
+        {
+			$this->load->library('session');
+			if( ! isset($_SESSION['user']) || $_SESSION['user'] == NULL )
+			{
+				$this->session->set_userdata('user', NULL);
+				$url = '/index#/login';
+                echo '<script language="javascript" type="text/javascript">';
+                echo 'window.location.href="' . $url . '"';
+                echo '</script>';
+                exit;
+			}
+        }
+    }
 
 }

@@ -23,6 +23,14 @@ class Message extends CI_Controller {
 		Header("Location:/index");
 	}
 
+	/**
+	 * @api {get} /Message/sendEmail Send Email
+	 * @apiName SendEmail
+	 * @apiGroup User
+	 * 
+	 * @apiVersion 0.0.1
+	 * 
+	 */
 	public function sendEmail()
 	{
 		$this->load->library('mailer');

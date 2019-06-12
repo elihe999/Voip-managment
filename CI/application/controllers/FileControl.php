@@ -33,11 +33,24 @@ class FileControl extends CI_Controller {
         return $result;
     }
 
+    /**
+     * @api {post} /FileControl/download/:folder Download folder as Zip
+     * @apiName Download zip
+     * @apiParam {String} folder Target result folder
+     * @apiGroup User
+     * @apiVersion 0.0.1
+     * 
+     * @apiError TargetNotFound The target folder was not found
+     * @apiErrorExample {json} Error-Response
+     * HTTP/1.1 404 Not Found
+     *  {"reason":"Not a folder"}
+     */
     public function download()
     {
         $this->load->library('zip');
-        $name = "/var/www/dphp/baphp/public/History/ylhe/2019/06/11/suite_153957/Attend_transfer@1/1/";
-        // $name = $_POST('fld');
+        // $name = "/var/www/dphp/baphp/public/History/ylhe/2019/06/11/suite_153957/Attend_transfer@1/1/";
+        $name = $this->input->get('fld');
+        // var_dump($name);exit();
         $datalist = $this->list_dir($name);
         
         // CI memory exhausted
@@ -48,6 +61,10 @@ class FileControl extends CI_Controller {
                 $this->zip->read_file($filename);
             }
             $this->zip->download(strval(date('m_d')).'result.zip');
+        }
+        else
+        {
+            $this->output->set_content_type('application/json')->set_output(json_encode(array('reason' => 'Not a folder')));
         }
     }
 
